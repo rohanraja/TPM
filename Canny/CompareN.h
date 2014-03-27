@@ -9,6 +9,11 @@ public:
     double scalefactor = 0.3;
     bestMatchInfo bm;
     
+    CompareN(vector<string> image_names)
+    {
+        
+    }
+    
     CompareN(char * m1src, char * m2src)
     {
         src1 = getResizedMat(m1src);

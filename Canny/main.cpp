@@ -41,12 +41,12 @@ int main( int argc, char** argv )
     
   //  cmp.findMostSimilar();
     
-    CompareN cmpn("/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg", "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg");
+//    CompareN cmpn("/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg", "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg");
     
     
-  //  CompareN cm2("/Users/rohanraja/Downloads/Scans/Test 5/1D.jpg", "/Users/rohanraja/Downloads/Scans/Test 5/1B.jpg");
+//CompareN cm2("/Users/rohanraja/Downloads/Scans/Test 5/1D.jpg", "/Users/rohanraja/Downloads/Scans/Test 5/1B.jpg");
     
-   //  CompareN cmpn("/Users/rohanraja/Downloads/resources/Image005.jpg", "/Users/rohanraja/Downloads/resources/Image006.jpg");
+     CompareN cmpn("/Users/rohanraja/Downloads/resources/Image005.jpg", "/Users/rohanraja/Downloads/resources/Image006.jpg");
     
     char* source_window = "Source";
 

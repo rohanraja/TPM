@@ -476,7 +476,7 @@ public:
         return rough_edges ;
     }
     
-    int length_of_candidate_points = 100;
+    int length_of_candidate_points = 150;
     
     int getNormfromFULL(Point &p1, Point &p2)
     {
