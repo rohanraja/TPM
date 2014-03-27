@@ -2,7 +2,7 @@ class bestMatchInfo
 {
     public :
     
-    int sim_max , sim_idx, sim_order, rough_edge_id ;
+    int sim_max , sim_idx, sim_order, rough_edge_id, best_mat_id, rough_edge_id_of_CANDI, candi_mat_id;
     double anglerot ;
     
     Point center_of_rot, CheckCaseStartPt ;
@@ -85,6 +85,8 @@ public:
         
         bminfo.center_of_rot = candidate_nv.pts[cnt_idx];
         
+        bminfo.rough_edge_id_of_CANDI = candi_MB.roughest_id;
+        
         conts = checkCase_MB.getEdgeSegment_NC(checkCase_res[bminfo.rough_edge_id]); //
         
         getVectorScoreforIDX(bminfo.sim_idx,bminfo.sim_order); // NOT NECESSARY
@@ -142,9 +144,18 @@ public:
 
     }
     
-    Mat selectCandi()
+    int can_proceed ;
+    
+    int selectCandi()
     {
         RoughEdge roughest = candi_MB.getBestRE() ;
+        
+        
+        
+        if(roughest.roughness_scores == -1)
+            can_proceed = 0;
+        else
+            can_proceed = 1;
         
         candidate_nv = candi_MB.getCandi_from_RE(roughest);
         
@@ -164,7 +175,7 @@ public:
         
         candi_score = calcIntfor(candi_m);
         
-        return candi_m;
+        return can_proceed;
         
     }
     

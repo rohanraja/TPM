@@ -34,6 +34,19 @@ int main( int argc, char** argv )
     /// Load source image and convert it to gray
     Mat src = imread( "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" , 1 );
     
+    char tmp1[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg" ;
+    char tmp2[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image002.jpg" ;
+    char tmp3[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" ;
+    
+    vector<char *> allImgs ;
+    
+    allImgs.push_back(tmp1);
+    allImgs.push_back(tmp2);
+    allImgs.push_back(tmp3);
+    
+    CompareN all_cmp(allImgs);
+    
+    
     
 //    CompareTwo cmp("/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg", "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg", "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image002.jpg");
     
@@ -43,10 +56,9 @@ int main( int argc, char** argv )
     
 //    CompareN cmpn("/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg", "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg");
     
+ //   CompareN cm2("/Users/rohanraja/Downloads/Scans/Test 5/1D.jpg", "/Users/rohanraja/Downloads/Scans/Test 5/1B.jpg");
     
-//CompareN cm2("/Users/rohanraja/Downloads/Scans/Test 5/1D.jpg", "/Users/rohanraja/Downloads/Scans/Test 5/1B.jpg");
-    
-     CompareN cmpn("/Users/rohanraja/Downloads/resources/Image005.jpg", "/Users/rohanraja/Downloads/resources/Image006.jpg");
+   //  CompareN cmpn("/Users/rohanraja/Downloads/resources/Image005.jpg", "/Users/rohanraja/Downloads/resources/Image006.jpg");
     
     char* source_window = "Source";
 

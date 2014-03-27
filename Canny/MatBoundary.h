@@ -12,6 +12,11 @@ class RoughEdge
         is_used = is;
     }
     
+    RoughEdge(int rs)
+    {
+        roughness_scores = rs ;
+    }
+    
 };
 
 class MatBoundary
@@ -30,6 +35,8 @@ public:
     vector<Point> NONcannyContour;
     vector<Point> corners;
     vector<int> cornerIndexes;
+    
+    
     
     MatBoundary()
     {
@@ -551,9 +558,10 @@ public:
         return candidate_nv;
     }
     
+    int roughest_id = 0;
     RoughEdge getBestRE()
     {
-        int max_score = 0, max_idx = 0;
+        int max_score = 0, max_idx = -1;
         
         for(int i=0; i<rough_edges.size(); i++)
         {
@@ -563,6 +571,15 @@ public:
                 max_idx = i;
             }
         }
+        
+        
+        if(max_idx == -1)
+        {
+            RoughEdge rs(-1);
+            return rs;
+        }
+        
+        roughest_id = max_idx;
         
         return rough_edges[max_idx];
     }
