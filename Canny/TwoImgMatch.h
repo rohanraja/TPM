@@ -5,6 +5,8 @@ class bestMatchInfo
     int sim_max , sim_idx, sim_order, rough_edge_id ;
     double anglerot ;
     
+    Point center_of_rot, CheckCaseStartPt ;
+    
     bestMatchInfo(int sm, int si, int so, double aor , int edgeID = 0)
     {
         sim_max = sm;
@@ -32,29 +34,23 @@ class TwoImgMatch
      Mat for_stitch1, for_stitch2 ;
     vector<Point> conts ;
     double angle_of_rot ;
+    
+    Point bm_center ;
 
 public:
 
     Point minC, maxC, diffC;
     vector<RoughEdge> checkCase_res;
     
-     TwoImgMatch(Mat &mat1, Mat &mat2 ): candi_m(mat1), checkCase_m(mat2)
+     TwoImgMatch(MatBoundary &MB1, MatBoundary &MB2 ): candi_MB(MB1), checkCase_MB(MB2)
     {
     
-        candi_MB = *new MatBoundary(mat1) ;
-        for_stitch1 = candi_MB.getBoundary();
-        candi_MB.getRoughedges();
         selectCandi();
-        
-        checkCase_MB = *new MatBoundary(mat2) ;
-        for_stitch2 = checkCase_MB.getBoundary();
-       
         
         showMat(candi_m, "TEST FOR CANDIDATE");
         
-        checkCase_res = checkCase_MB.getRoughedges();
+        checkCase_res = checkCase_MB.rough_edges ;
         
-        getBestforallRES();
         
     }
     
@@ -77,7 +73,17 @@ public:
             }
         }
         
-        cout << "\n\n RID_BEST = " << bminfo.rough_edge_id ;
+       
+        int cnt_idx;
+        
+        if (bminfo.sim_order==1)
+            cnt_idx = candidate_nv.num-1;
+        else
+            cnt_idx = 0;
+        
+        candidate_nv.translate_to_point(Point(15,15) - minC - bm_center);
+        
+        bminfo.center_of_rot = candidate_nv.pts[cnt_idx];
         
         conts = checkCase_MB.getEdgeSegment_NC(checkCase_res[bminfo.rough_edge_id]); //
         
@@ -95,7 +101,7 @@ public:
         double t = (double)getTickCount();
         int sim, sim_max = INT_MAX, sim_idx, sim_order ;
         
-        int icnt = 5 ;
+        int icnt = 3 ;
         for (int i=0; i < conts.size(); i = i + icnt) {
 
             sim = getVectorScoreforIDX(i,1);
@@ -106,6 +112,9 @@ public:
                 sim_order = 1;
                 
                 bminfo = *new bestMatchInfo(sim_max,sim_idx,sim_order,angle_of_rot);
+                                
+                bminfo.CheckCaseStartPt = conts[i] ;
+                
             }
 
             sim = getVectorScoreforIDX(i,0);
@@ -115,6 +124,8 @@ public:
                 sim_idx = i;
                 sim_order = 0;
                 bminfo = *new bestMatchInfo(sim_max,sim_idx,sim_order,angle_of_rot);
+                
+                bminfo.CheckCaseStartPt = conts[i] ;
                 
             }
             
@@ -137,6 +148,8 @@ public:
         
         candidate_nv = candi_MB.getCandi_from_RE(roughest);
         
+        bm_center = candidate_nv.pts[0];
+        
         candidate_nv.translate_to_point(candidate_nv.pts[0]);
         
          maxC = candidate_nv.getMaxCoord();
@@ -155,6 +168,8 @@ public:
         
     }
     
+    Point center ;
+    
     int getVectorScoreforIDX(int startIdx = 0, int iscnt = 1 )
     {
         
@@ -166,7 +181,7 @@ public:
             cnt_idx = 0;
         
         
-        Point center = candidate_nv.pts[cnt_idx];
+        center = candidate_nv.pts[cnt_idx];
         Point endpt = candidate_nv.pts[candidate_nv.num-1 - cnt_idx];
         
         checkCase_nv = *new newVector();
@@ -176,7 +191,7 @@ public:
         
         checkCase_nv.translate_to_point(checkCase_nv.pts[0] -1*center);
         
-        checkCase_m = checkCase_nv.plotPoints(2, diffC.x, diffC.y);
+        checkCase_m = checkCase_nv.plotPoints(4, diffC.x, diffC.y);
         
         Point v11 = checkCase_nv.pts[checkCase_nv.num-1] - center ;
         Point v22 = endpt - center ;

@@ -19,7 +19,7 @@ public:
         final2.setTo(Scalar(0,255,0));
         
         
-        int pad = 100 ;
+        int pad = 50 ;
         
        
 

@@ -45,6 +45,8 @@ int main( int argc, char** argv )
     
     
     
+  //   CompareN cmpn("/Users/rohanraja/Downloads/resources/Image005.jpg", "/Users/rohanraja/Downloads/resources/Image006.jpg");
+    
     char* source_window = "Source";
 
     
