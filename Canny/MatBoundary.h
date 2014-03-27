@@ -192,7 +192,7 @@ public:
         Mat crop(drawing2.rows, drawing2.cols, CV_8UC3);
         
         // set background to green
-        crop.setTo(Scalar(0,255,0));
+        crop.setTo(Scalar(0,0,0));
         
         // and copy the magic apple
         src.copyTo(crop, drawing2);

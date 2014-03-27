@@ -27,6 +27,7 @@ public:
         
         bm = twoM.getBestforallRES();
         
+        cout << "The score is : " << bm.sim_max ;
        
       //  MyFilledCircle(for_stitch1, bm.center_of_rot);
         
