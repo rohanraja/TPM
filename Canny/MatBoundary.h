@@ -12,9 +12,6 @@ class RoughEdge
         is_used = is;
     }
     
-    
-    
-    
 };
 
 class MatBoundary
@@ -26,11 +23,11 @@ class MatBoundary
     int rows, cols, max_p;
     Mat mat, nmat, drawing ;
     
-    vector<Point> cannyContour;
-    vector<Point> NONcannyContour;
     
 public:
     
+    vector<Point> cannyContour;
+    vector<Point> NONcannyContour;
     vector<Point> corners;
     vector<int> cornerIndexes;
     
@@ -203,10 +200,6 @@ public:
         // normalize so imwrite(...)/imshow(...) shows the mask correctly!
         //   normalize(drawing.clone(), crop, 0.0, 255.0, CV_MINMAX, CV_8UC1);
         
-        
-        namedWindow( "TEST CORNERS22", CV_WINDOW_AUTOSIZE );
-        imshow("TEST CORNERS22", crop);
-        
         calcNonCannY();
         
         cannyContour = contours[maxAreaIdx];
@@ -250,10 +243,7 @@ public:
         
         Scalar color = Scalar( 255, 255, 255 );
         drawContours( drawing2, contours2, maxIDX, color, 2, 8, hierarchy, 0, Point() );
-        
-        
-        namedWindow("NONCANNY");
-        imshow("NONCANNY", drawing2);
+
         
         
         NONcannyContour = contours2[maxIDX];
@@ -312,8 +302,7 @@ public:
         
         cout << "\n TOTAL CORNER POINTS : " << corners.size() << "\n";
         
-        namedWindow( "TEST CORNERS22", CV_WINDOW_AUTOSIZE );
-        imshow("TEST CORNERS22",  this->drawing);
+
         
         return this->drawing;
         
@@ -354,8 +343,6 @@ public:
         double scaleFactor = 0.5;
         resize(tmp2, tmp2, Size(), scaleFactor, scaleFactor, INTER_CUBIC);
         
-        namedWindow( imgname, CV_WINDOW_AUTOSIZE );
-        imshow( imgname, tmp2 );
         
         return contours_poly;
     }
@@ -425,10 +412,7 @@ public:
         nv.translate_to_point(minC - Point(15,15));
         
         Mat image1 = nv.plotPoints(5,diffC.x, diffC.y) ;
-        
-        namedWindow("NLL1", CV_WINDOW_AUTOSIZE );
 
-        imshow( "NLL1", image1 );
 
         vector<Point> vpp;
         vpp.push_back(NC[idx1]) ;
@@ -466,8 +450,6 @@ public:
         
         DisplayText(diff, str, ppp);
         
-        imshow( "DIFF LAPP",diff);
-        
         return ((100*score)/basescore);
         
     }
@@ -479,10 +461,7 @@ public:
     vector<RoughEdge> getRoughedges()
     {
         vector<Point> vvvpp = getPolyAPprox();
-
-        
-        
-        
+   
         for(int j = 0 ; j < vvvpp.size(); j++ )
         {
             int curscore = checkforNonLinear(vvvpp[j],vvvpp[(j+1)%vvvpp.size()]);
@@ -502,7 +481,7 @@ public:
     int getNormfromFULL(Point &p1, Point &p2)
     {
         int idx1 = findIdexofNearestCNT(p1);
-        int idx2 = findFROM_NC_TO_C(p2);
+        int idx2 = findIdexofNearestCNT(p2);
         
         
         vector<Point> NC = getNonCannY();
@@ -589,6 +568,21 @@ public:
     }
     
     
-    
+    vector<Point> getEdgeSegment_NC(RoughEdge re)
+    {
+        int idx1 = findIdexofNearestCNT(re.roughpair.first);
+        int idx2 = findIdexofNearestCNT(re.roughpair.second);
+        
+        vector<Point> NC = getNonCannY();
+        
+        int d1 = abs(idx2-idx1);
+        
+        if(idx1 > idx2)
+            d1 = NC.size() - idx1 + idx2 ;
+        
+        newVector nv(d1, NC, idx1, "NONLCHECK");
+        
+        return nv.pts;
+    }
     
 };
