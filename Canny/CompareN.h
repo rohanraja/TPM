@@ -11,6 +11,35 @@ public:
     }
 };
 
+struct RotationData
+{
+    double angle;
+    Point center_of_rot ;
+};
+
+class TotalChange
+{
+    public :
+    
+    double angle;
+    vector<RotationData> rotation_data ;
+    vector<Point> translations ;
+    
+    TotalChange()
+    {
+    }
+    
+    void addChanges(bestMatchInfo &bm)
+    {
+        RotationData rd ;
+        rd.angle = bm.anglerot ;
+        rd.center_of_rot = bm.center_of_rot ;
+        rotation_data.push_back(rd);
+        translations.push_back(bm.getTransVector());
+    }
+    
+};
+
 class CompareN
 {
     MatBoundary MB1, MB2, MB3 ;
@@ -26,13 +55,18 @@ public:
     vector<Mat> for_stitches ;
     MatBoundary MatBs[40] ;
     
+    vector<TotalChange> mat_changes ;
+    
     vector<matchTrack> match_Tracks;
+    
+    vector<bestMatchInfo> allMatches ;
     
     CompareN(vector<char *> image_names)
     {
         Mat tmp_src, for_stitch_tmp;
         MatBoundary tmpB;
         
+        mat_changes = *new vector<TotalChange>(image_names.size()) ;
         
         for(int i=0 ; i<image_names.size(); i++)
         {
@@ -50,49 +84,123 @@ public:
         }
         
         solve();
+      //  stitch_mats(allMatches[0]);
+        
+        stitch_all();
+        
+        
     }
     
     void solve()
     {
         int cur_candi = 0;
-        bestMatchInfo bminfo ;
-        int sim, sim_max = INT_MAX, sim_idx, sim_order, simtmp ;
         
-        for(int i=0 ; i<src_mats.size(); i++)
+        while(cur_candi < src_mats.size() - 1)
         {
-           if(i!=cur_candi)
-           {
-               TwoImgMatch twoM(MatBs[cur_candi], MatBs[i]);
-               
-               if(twoM.can_proceed == 0)
-                   continue;
-               
-               bestMatchInfo bmtmp = twoM.getBestforallRES();
-               
-               if (bmtmp.sim_max < sim_max) {
+            bestMatchInfo bminfo ;
+            int sim, sim_max = INT_MAX, sim_idx, sim_order, simtmp ;
+            
+            for(int i=0 ; i<src_mats.size(); i++)
+            {
+               if(i!=cur_candi)
+               {
+                   TwoImgMatch twoM(MatBs[cur_candi], MatBs[i]);
                    
-                   sim_max = bmtmp.sim_max;
-                   bminfo = bmtmp ;
-                   bminfo.best_mat_id = i;
-                   bminfo.candi_mat_id = cur_candi;
-                
+                   if(twoM.can_proceed == 0)
+                       continue;
+                   
+                   bestMatchInfo bmtmp = twoM.getBestforallRES();
+                   
+                   if (bmtmp.sim_max < sim_max) {
+                       
+                       sim_max = bmtmp.sim_max;
+                       bminfo = bmtmp ;
+                       bminfo.best_mat_id = i;
+                       bminfo.candi_mat_id = cur_candi;
+                    
+                   }
+                   
                }
-               
-           }
+                
+            }
+            
+            MatBs[bminfo.best_mat_id].rough_edges[bminfo.rough_edge_id].is_used = 1;
+            
+            MatBs[bminfo.candi_mat_id].rough_edges[bminfo.rough_edge_id_of_CANDI].is_used = 1;
+            
+            
+
+//            
+            for(int k=0; k<allMatches.size();k++)
+            {
+                if(allMatches[k].best_mat_id == bminfo.best_mat_id)
+                    mat_changes[allMatches[k].candi_mat_id].addChanges(bminfo);
+            
+                if(allMatches[k].candi_mat_id == bminfo.best_mat_id)
+                    mat_changes[allMatches[k].best_mat_id].addChanges(bminfo);
+            
+            }
+            
+            allMatches.push_back(bminfo);
+            
+            mat_changes[bminfo.best_mat_id].addChanges(bminfo);
+            
+            cur_candi++ ;
+        
+        }
+        
+    }
+    
+    int pad = 200 ;
+    
+    Mat get_final_rotated(int the_id)
+    {
+        Mat final = Mat::zeros( 2000, 2000, for_stitches[the_id].type() );
+        final.setTo(Scalar(0,0,0));
+        
+        copyMakeBorder(for_stitches[the_id],final,pad,pad,pad,pad,BORDER_CONSTANT,Scalar(0,0,0));
+        
+        
+        
+        for(int k=0; k < mat_changes[the_id].rotation_data.size() ; k++)
+        {
+           
+            final = translateImg(final, mat_changes[the_id].translations[k]);
+            
+            Point cnt_for_rot = mat_changes[the_id].rotation_data[k].center_of_rot ;
+            double angleofrot = mat_changes[the_id].rotation_data[k].angle ;
+            
+            Mat warp_mat = getRotationMatrix2D( Point(cnt_for_rot.x+pad, cnt_for_rot.y + pad ), angleofrot, 1 );
+            
+            warpAffine( final, final, warp_mat, final.size() );
+            
             
         }
         
-        MatBs[bminfo.best_mat_id].rough_edges[bminfo.rough_edge_id].is_used = 1;
+        return final;
         
-        MatBs[bminfo.candi_mat_id].rough_edges[bminfo.rough_edge_id_of_CANDI].is_used = 1;
+    }
+    
+    
+    void stitch_all()
+    {
+        Mat mega_FINAL =  get_final_rotated(0) ;
         
+        for(int i=1 ; i<mat_changes.size(); i++)
+        {
+            Mat tmpfinal = get_final_rotated(i);
+            
+            mega_FINAL = mega_FINAL + tmpfinal;
+            
+        }
         
+        showMat(mega_FINAL, "SHOWDOWN" );
     }
     
     void stitch_mats(bestMatchInfo bminfo )
     {
         Point center_for_rot = bminfo.center_of_rot;
-        Point trans_vector = bminfo.CheckCaseStartPt - center_for_rot;
+        Point trans_vector = bminfo.getTransVector();
         
         Mat fs1 = for_stitches[bminfo.candi_mat_id];
         Mat fs2 = for_stitches[bminfo.best_mat_id];
@@ -102,6 +210,7 @@ public:
         Mat frst = rp.addImages(trans_vector,center_for_rot , bminfo.anglerot);
         
         rp.showImages();
+        
     }
     
     CompareN(char * m1src, char * m2src)
@@ -157,6 +266,28 @@ public:
         Mat src = imread( ssrc, 1 );
         resize(src, src, Size(), scalefactor, scalefactor, INTER_CUBIC);
         return src;
+    }
+    
+    Mat translateImg(Mat &m, Point &p)
+    {
+        Mat map_x(m.size(), CV_32FC1);
+        Mat map_y(m.size(), CV_32FC1);
+        Mat dst(m.size(), m.type());
+        
+        for( int j = 0; j < m.rows; j++ )
+        {
+            for( int i = 0; i < m.cols; i++ )
+            {
+                map_x.at<float>(j,i) = i + p.x;
+                map_y.at<float>(j,i) = j + p.y;
+            }
+        }
+        
+        remap( m, dst, map_x, map_y, CV_INTER_LINEAR, BORDER_CONSTANT, Scalar(0,0, 0) );
+        
+        return dst;
+        
+        
     }
 
 

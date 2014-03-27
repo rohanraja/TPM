@@ -24,8 +24,9 @@ public:
        
 
         copyMakeBorder(m1,final1,pad,pad,pad,pad,BORDER_CONSTANT,Scalar(0,0,0));
+        copyMakeBorder(m2,final2,pad,pad,pad,pad,BORDER_CONSTANT,Scalar(0,0,0));
         
-        copyMakeBorder(m2,final2,(final1.rows - m2.rows)/2,(final1.rows - m2.rows)/2,(final1.cols - m2.cols)/2,(final1.cols - m2.cols)/2,BORDER_CONSTANT,Scalar(0,0,0));
+      //  copyMakeBorder(m2,final2,(final1.rows - m2.rows)/2,(final1.rows - m2.rows)/2,(final1.cols - m2.cols)/2,(final1.cols - m2.cols)/2,BORDER_CONSTANT,Scalar(0,0,0));
     
 //        Mat out = Mat::zeros(final2.size(), final2.type());
 //        final2(Rect(0,429, final2.cols,final2.rows-429)).copyTo(out(Rect(0,0,final2.cols,final2.rows-429)));

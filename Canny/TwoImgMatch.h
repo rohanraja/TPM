@@ -21,6 +21,12 @@ class bestMatchInfo
         
     }
     
+    Point getTransVector()
+    {
+        Point p = CheckCaseStartPt - center_of_rot ;
+        return p;
+    }
+    
 };
 
 class TwoImgMatch
@@ -100,7 +106,8 @@ public:
         
         bestMatchInfo bminfo;
         
-        double t = (double)getTickCount();
+//        double t = (double)getTickCount();
+        
         int sim, sim_max = INT_MAX, sim_idx, sim_order ;
         
         int icnt = 3 ;
@@ -133,12 +140,12 @@ public:
             
         }
         
-        t = ((double)getTickCount() - t)/getTickFrequency();
-        cout << "Times passed in seconds: " << t << endl;
-        
-        cout << "\n Minimum Similarity = " << 100 - sim_max << " %";
-        cout << "\n Minimum Similarity INDEX = " << sim_idx;
-        cout << "\n Minimum Similarity INDEX = " << sim_order;
+//        t = ((double)getTickCount() - t)/getTickFrequency();
+//        cout << "Times passed in seconds: " << t << endl;
+//        
+//        cout << "\n Minimum Similarity = " << 100 - sim_max << " %";
+//        cout << "\n Minimum Similarity INDEX = " << sim_idx;
+//        cout << "\n Minimum Similarity INDEX = " << sim_order;
         
         return bminfo;
 
@@ -225,7 +232,7 @@ public:
         namedWindow( "Rotated", CV_WINDOW_AUTOSIZE );
         imshow( "Rotated", rotated );
         
-        cout << "SCORE = " << (score*100)/candi_score ;
+    //    cout << "SCORE = " << (score*100)/candi_score ;
         
         return (score*100)/candi_score;
         
