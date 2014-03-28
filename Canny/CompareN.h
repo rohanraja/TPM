@@ -164,6 +164,8 @@ public:
         
         for(int k=0; k < mat_changes[the_id].rotation_data.size() ; k++)
         {
+            
+            
            
             final = translateImg(final, mat_changes[the_id].translations[k]);
             
@@ -173,7 +175,7 @@ public:
             Mat warp_mat = getRotationMatrix2D( Point(cnt_for_rot.x+pad, cnt_for_rot.y + pad ), angleofrot, 1 );
             
             warpAffine( final, final, warp_mat, final.size() );
-            
+                        
             
         }
         

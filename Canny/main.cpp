@@ -5,6 +5,8 @@ int thickness_for_vectorCMP = 4;
 
 int length_of_candidate_points = 150;
 
+int candi_step = 10;
+
 
 #include "DrawFunc.h"
 #include "NewCorner.h"
@@ -122,9 +124,9 @@ int main( int argc, char** argv )
     allImgs.push_back(tmp4);
     
     
- //   vector<char *> out = getFilenames(argv[1]);
+    vector<char *> out = getFilenames(argv[1]);
     
-    CompareN all_cmp(allImgs);
+    CompareN all_cmp(out);
     
     
     

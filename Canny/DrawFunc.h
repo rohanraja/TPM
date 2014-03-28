@@ -17,7 +17,7 @@ void MyFilledCircle( Mat img, Point center, int bl = 0 )
     int lineType = 8;
     
     circle( img,
-           center,3,
+           center,5,
            Scalar( bl, 0, 155 ),
            thickness,
            lineType );
@@ -130,7 +130,7 @@ void showMat(Mat &m, char *windowname)
     
     strcat(ext, ".jpg");
     
-    char basedir[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft_images/";
+    char basedir[200] = "./results/";
     
     strcat(basedir, ext);
     

@@ -502,7 +502,7 @@ public:
         double tmpdist, maxdist = 0;
         int max_idx = 0;
         
-        for(int i =0; i< nv.pts.size() - length_of_candidate_points ; i = i + 1)
+        for(int i =0; i< nv.pts.size() - length_of_candidate_points ; i = i + candi_step)
         {
             newVector nv2(length_of_candidate_points, nv.pts, i, "NONLCHECK");
             
