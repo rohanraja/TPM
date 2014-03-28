@@ -1,12 +1,18 @@
 // Created by Rohan Raja
 
+
+int thickness_for_vectorCMP = 4;
+
+int length_of_candidate_points = 150;
+
+
 #include "DrawFunc.h"
 #include "NewCorner.h"
 #include "NewVector.h"
 #include "MatBoundary.h"
 
 #include "RepositionTwoIm.h"
-#include "VectorTrans.h"
+//#include "VectorTrans.h"
 #include "TwoImgMatch.h"
 #include "CompareN.h"
 
@@ -27,22 +33,96 @@ MatBoundary mb;
 MatBoundary mb2;
 Mat drawing2;
 
+ // THE PARAMETERS START
+
+
+ // THE PARAMETERS END
+
 /** @function main */
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <vector>
+#include<string>
+#include<string.h>
+#include <libgen.h>
+#include <dirent.h>
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+
+int checkifdir(string path)
+{
+    
+    char *myDir = new char[path.length() + 1];
+    strcpy(myDir, path.c_str());
+    
+    struct stat myStat;
+    if ((stat(myDir, &myStat) == 0) && (((myStat.st_mode) & S_IFMT) == S_IFDIR)) {
+        return 1;
+    }
+    
+    return 0;
+}
+
+
+// dir - complete system folder name
+vector<char *> getFilenames(string inpimgdir){
+    class dirent *ent;
+    DIR *dir = opendir(inpimgdir.c_str());
+    char *inpimgpath;
+    string temp_str;
+    
+    vector<char *> listofImgs ;
+    // Initial Set of Images
+    while ((ent = readdir (dir)) != NULL){
+        
+        temp_str = inpimgdir + "/" + ent->d_name ;
+        inpimgpath = new char[temp_str.length() + 1];
+        strcpy(inpimgpath, temp_str.c_str());
+        
+        if(!checkifdir(temp_str)){
+            listofImgs.push_back(inpimgpath);	
+        }
+        
+    }
+    return listofImgs;
+}
+
+
 int main( int argc, char** argv )
 {
+    
+    
+    
+    
     Mat drawing;
     /// Load source image and convert it to gray
     Mat src = imread( "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" , 1 );
     
-    char tmp1[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg" ;
-    char tmp2[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image002.jpg" ;
-    char tmp3[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" ;
+  //  char tmp1[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image001.jpg" ;
+  //  char tmp2[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image002.jpg" ;
+ //   char tmp3[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" ;
     
+    char tmp1[200] = "/Users/rohanraja/Downloads/Scans/Test 5/1A.jpg" ;
+    char tmp2[200] = "/Users/rohanraja/Downloads/Scans/Test 5/1B.jpg" ;
+    char tmp3[200] = "/Users/rohanraja/Downloads/Scans/Test 5/1C.jpg" ;
+    char tmp4[200] = "/Users/rohanraja/Downloads/Scans/Test 5/1D.jpg" ;
+    
+//    char tmp1[200] = "/Users/rohanraja/Downloads/resources/Image005.jpg";
+  //  char tmp2[200] = "/Users/rohanraja/Downloads/resources/Image006.jpg";
+    
+  //  char tmp3[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft/santosh_kumar/bin/other files/Image003.jpg" ;
     vector<char *> allImgs ;
-    
+  //
     allImgs.push_back(tmp1);
     allImgs.push_back(tmp2);
     allImgs.push_back(tmp3);
+    allImgs.push_back(tmp4);
+    
+    
+ //   vector<char *> out = getFilenames(argv[1]);
     
     CompareN all_cmp(allImgs);
     

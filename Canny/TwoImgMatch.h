@@ -205,11 +205,11 @@ public:
         checkCase_nv = *new newVector();
         checkCase_nv = getPoint_AT_Dist(conts[startIdx],len_of_candi, conts) ;
         
-        int opti_end_idx = getIndexofPoint2(checkCase_nv.pts[checkCase_nv.num - 2], conts) ;
+        int opti_end_idx = getIndexofPointCMP(checkCase_nv.pts[checkCase_nv.num - 2], conts) ;
         
         checkCase_nv.translate_to_point(checkCase_nv.pts[0] -1*center);
         
-        checkCase_m = checkCase_nv.plotPoints(4, diffC.x, diffC.y);
+        checkCase_m = checkCase_nv.plotPoints(thickness_for_vectorCMP, diffC.x, diffC.y);
         
         Point v11 = checkCase_nv.pts[checkCase_nv.num-1] - center ;
         Point v22 = endpt - center ;

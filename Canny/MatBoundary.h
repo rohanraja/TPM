@@ -483,7 +483,7 @@ public:
         return rough_edges ;
     }
     
-    int length_of_candidate_points = 150;
+    
     
     int getNormfromFULL(Point &p1, Point &p2)
     {
@@ -502,7 +502,7 @@ public:
         double tmpdist, maxdist = 0;
         int max_idx = 0;
         
-        for(int i =0; i< nv.pts.size() - length_of_candidate_points ; i = i + length_of_candidate_points)
+        for(int i =0; i< nv.pts.size() - length_of_candidate_points ; i = i + 1)
         {
             newVector nv2(length_of_candidate_points, nv.pts, i, "NONLCHECK");
             

@@ -124,4 +124,15 @@ void showMat(Mat &m, char *windowname)
 {
     namedWindow( windowname, CV_WINDOW_AUTOSIZE );
     imshow(windowname, m);
+    
+    char ext[200] ;
+    strcpy(ext,windowname);
+    
+    strcat(ext, ".jpg");
+    
+    char basedir[200] = "/Users/rohanraja/Documents/Rails_Projects/Opensoft_images/";
+    
+    strcat(basedir, ext);
+    
+    imwrite( basedir, m );
 }
